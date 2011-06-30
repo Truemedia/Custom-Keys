@@ -1,0 +1,597 @@
+<!doctype html>
+<html manifest="customkeys.manifest">
+    <head>
+        <meta charset="UTF-8" />
+        <title>jQTouch &beta;</title>
+        <style type="text/css" media="screen">@import "jqtouch/jqtouch.min.css";</style>
+        <style type="text/css" media="screen">@import "themes/jqt/theme.min.css";</style>
+        <link rel="stylesheet" type="text/css" href="iphone.css" />
+        <script src="jqtouch/jquery.1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="jqtouch/jqtouch.min.js" type="application/x-javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+            var jQT = new $.jQTouch({
+                icon: 'app_icon.png',
+                addGlossToIcon: true,
+                startupScreen: 'jqt_startup.png',
+                statusBar: 'grey',
+                preloadImages: [
+                    'themes/jqt/img/back_button.png',
+                    'themes/jqt/img/back_button_clicked.png',
+                    'themes/jqt/img/button_clicked.png',
+                    'themes/jqt/img/grayButton.png',
+                    'themes/jqt/img/whiteButton.png',
+                    'themes/jqt/img/loading.gif'
+                    ]
+            });
+            // Some sample Javascript functions:
+            $(function(){
+                // Show a swipe event on swipe test
+                $('#swipeme').swipe(function(evt, data) {                
+                    $(this).html('You swiped <strong>' + data.direction + '</strong>!');
+                });
+                $('a[target="_blank"]').click(function() {
+                    if (confirm('This link opens in a new window.')) {
+                        return true;
+                    } else {
+                        $(this).removeClass('active');
+                        return false;
+                    }
+                });
+                // Page animation callback events
+                $('#pageevents').
+                    bind('pageAnimationStart', function(e, info){ 
+                        $(this).find('.info').append('Started animating ' + info.direction + '&hellip; ');
+                    }).
+                    bind('pageAnimationEnd', function(e, info){
+                        $(this).find('.info').append(' finished animating ' + info.direction + '.<br /><br />');
+                    });
+                // Page animations end with AJAX callback event, example 1 (load remote HTML only first time)
+                $('#callback').bind('pageAnimationEnd', function(e, info){
+                    if (!$(this).data('loaded')) {                      // Make sure the data hasn't already been loaded (we'll set 'loaded' to true a couple lines further down)
+                        $(this).append($('<div>Loading</div>').         // Append a placeholder in case the remote HTML takes its sweet time making it back
+                            load('ajax.html .info', function() {        // Overwrite the "Loading" placeholder text with the remote HTML
+                                $(this).parent().data('loaded', true);  // Set the 'loaded' var to true so we know not to re-load the HTML next time the #callback div animation ends
+                            }));
+                    }
+                });
+                // Orientation callback event
+                $('body').bind('turn', function(e, data){
+                    $('#orient').html('Orientation: ' + data.orientation);
+                });
+            });
+        </script>
+        <script src="iphone.js" type="text/javascript" charset="utf-8"></script>
+        <style type="text/css" media="screen">
+            body.fullscreen #home .info {
+                display: none;
+            }
+            #about {
+                padding: 100px 10px 40px;
+                text-shadow: rgba(255, 255, 255, 0.3) 0px -1px 0;
+                font-size: 13px;
+                text-align: center;
+                background: #161618;
+            }
+            #about p {
+                margin-bottom: 8px;
+            }
+            #about a {
+                color: #fff;
+                font-weight: bold;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="about" class="selectable">
+                <p><img src="jqtouch.png" /></p>
+                <p><strong>Custom keys</strong><br />Version 1.0 beta<br />
+                    <a href="http://www.mediacityonline.net">By Wade Penistone</a></p>
+                <p><em>Use your ipod, iphone, or ipad<br /> as the ultimate keyboard</em></p>
+                <p>
+                    <a href="http://mediacityonline.net" target="_blank">See more Media City Online official products</a>
+                </p>
+                <p><br /><br /><a href="#" class="grayButton goback">Close</a></p>
+        </div>
+        <div id="ajax">
+            <div class="toolbar">
+                <h1>Create</h1><a class="button slideup" href="#animations">&#32;-&#32;</a>
+                <a class="back" href="#home">Cancel</a>
+            </div>
+           <form>
+                <ul class="edit rounded">
+                    <li><input type="text" name="name" placeholder="Application name" id="some_name" /></li>
+                    <li><input type="text" name="search" placeholder="Icon" id="some_name" /></li>
+                    <li><input type="text" name="phone" placeholder="Extension URL" id="some_name"  /></li>
+                    <li><input type="text" name="zip" placeholder="Description" id="some_name" /></li>
+                    <li><textarea placeholder="Textarea" ></textarea></li>
+                    <li>Ipad upscaler <span class="toggle"><input type="checkbox" /></span></li>
+                    <li>
+                        <select id="lol">
+                            <optgroup label="Windows OS">
+                                <option value ="1">Xp</option>
+                                <option value ="2">Vista</option>
+                                <option value ="3">7</option>
+                            </optgroup>
+                            <optgroup label="Mac OS X">
+                                <option value ="1">Tiger (10.0)</option>
+                                <option value ="2">Snow Lepord (10.8)</option>
+                            </optgroup>
+                        </select>
+                    </li>
+                    <li><input type="password" name="some_name" value="iphonedelcopon" id="some_name" /></li>
+                    <li><input type="checkbox" name="some_name" value="Hello" id="some_name" title="Password promt" /></li>
+                    <li><input type="checkbox" name="some_name" value="Hello" checked="checked" id="some_name" title="Automatic logout" /></li>
+                    <li><input type="radio" name="some_name" value="Hello" id="some_name" title="Only windows compatable" /></li>
+                    <li><input type="radio" name="some_name" value="Hello" id="some_name" title="Only mac compatable" /></li>
+                </ul>
+            </form>
+        </div>
+        <div id="animations">
+            <div class="toolbar">
+                <h1>Modify</h1><a class="button slideup" href="#ajax">+</a>
+                <a class="back" href="#">Home</a>
+            </div>
+            <ul class="rounded">
+                <li id="modification_00"><a href="#" onclick="popup_options('modification_00')">Itunes</a></li>
+                <li><a class="slideup" href="#animdemo">QuickTime</a></li>
+                <li><a class="dissolve" href="#animdemo">Safari</a></li>
+        </div>
+        <div id="animdemo">
+            <div style="font-size: 1.5em; text-align: center; margin: 160px 0 160px; font-family: Marker felt;">
+                Pretty smooth, eh?            
+            </div>
+            <a style="margin:0 10px;color:rgba(0,0,0,.9)" href="#" class="whiteButton goback">Go back</a>
+        </div>
+        <div id="callback">
+            <div class="toolbar">
+                <h1>AJAX w/Callback</h1>
+                <a class="back" href="#">Ajax</a>
+            </div>
+        </div>
+        <div id="callbacks">
+            <div class="toolbar">
+                <h1>Events</h1>
+                <a class="back" href="#home">Home</a>
+            </div>
+            <ul class="rounded">
+                <li><a href="#pageevents">Page events</a></li>
+                <li id="swipeme">Swipe me!</li>
+                <li id="orient">Orientation: <strong>profile</strong></li>
+            </ul>
+        </div>
+        <div id="demos">
+            <div class="toolbar">
+                <h1>Demos</h1>
+                <a class="back" href="#home">Home</a>
+            </div>
+            <div class="info">
+                These apps open in a new window. Don&#8217;t forget to save them to your home screen to enable full-screen mode.
+            </div>
+            <ul class="rounded">
+                <li class="forward"><a target="_webapp" href="../todo/">To-Do app</a></li>
+                <li class="forward"><a target="_webapp" href="../clock/">Clock app</a></li>
+            </ul>
+        </div>
+        <div id="edge">
+            <div class="toolbar">
+                <h1>Itunes</h1>
+                <a href="#" class="back">Exit</a>
+            </div>
+           <div class="info">
+                <p><strong>Itunes custom keyboard</strong></p>
+            </div>
+        </div>
+        <div id="extensions">
+            <div class="toolbar">
+                <h1>Settings</h1>
+                <a class="back" href="#home">Home</a>
+            </div>
+            <ul class="rounded">
+                <li class="forward"><a href="">Require login</a></li>
+                <li class="forward"><a href="">2</a></li>
+                <li class="forward"><a href="">3</a></li>
+                <li class="forward"><a href="">4</a></li>
+            </ul>
+            <div class="info">
+             Any destructive changes made here will be permanent. Please make sure you sync all your settings and custom keyboards with the the custom keys desktop application available <a href="http://mediacityonline.net/store">here</a>, to recover anything incase you want to undo any changes in the settings
+            </div>
+        </div>
+        <div id="forms">
+            <div class="toolbar">
+                <h1>Itunes</h1>
+                <a href="#" class="back">Back</a>
+            </div>
+           <img src="Custom_keys(defaultMAP).png" />
+           <div class="info">
+                <p><strong>Itunes custom keyboard</strong></p>
+            </div>
+        </div>
+        <div id="home" class="current">
+            <div class="toolbar">
+                <h1>Custom Keys</h1>
+                <a class="button slideup" id="infoButton" href="#about">About</a>
+            </div>
+<ul class="rounded">
+   <li class="arrow"><a href="#ui">Load keyboard</a> <small class="counter" id="loads"></small></li>
+                <li class="arrow"><a href="#animations">Modify existing keyboard</a> <small class="counter" id="mods"></small></li>
+                <li class="arrow"><a href="#ajax">Create new keyboard</a> <small class="counter" id="creates"></small></li>
+            </ul>
+            <h2>Support</h2>
+            <ul class="rounded">
+                <li class="forward"><a href="http://mediacityonline.net/news/category/products/customkeys/" target="_blank">News</a></li>
+                <li class="forward"><a href="http://mediacityonline.net/forum/viewforum.php?f=22" target="_blank">Forum</a></li>
+                <li class="forward"><a href="#pageevents">Store</a></li>
+            </ul>
+            <ul class="individual">
+                <li><a href="#metal">Login</a></li>
+                <li><a href="#extensions">Settings</a></li>
+            </ul>
+             <script>
+// javascript database
+try {
+    if (!window.openDatabase) {
+        alert('not supported');
+    } else {
+        var shortName = 'storedinformation';
+        var version = '1.0';
+        var displayName = 'Custom keys data';
+        var maxSize = 65536; // in bytes
+        var db = openDatabase(shortName, version, displayName, maxSize);
+ 
+        // You should have a database instance in db.
+    }
+} catch(e) {
+    // Error handling code goes here.
+    if (e == 2) {
+        // Version number mismatch.
+        alert("Invalid database version.");
+    } else {
+        alert("Unknown error "+e+".");
+    }
+    return;
+}
+// alert("Database is: "+db);
+// insert data
+function nullDataHandler(transaction, results) { }
+ 
+function createTables(db)
+{
+    db.transaction(
+        function (transaction) {
+ 
+            /* The first query causes the transaction to (intentionally) fail if the table exists. */
+            transaction.executeSql('CREATE TABLE keyboards(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL DEFAULT "Untitled", icon TEXT NOT NULL DEFAULT "/images/appicon.png");', [], nullDataHandler, errorHandler);
+            /* These insertions will be skipped if the table already exists. */
+            transaction.executeSql('insert into keyboards (name, icon) VALUES ("Itunes", "/itunes.png");', [], nullDataHandler, errorHandler);
+            transaction.executeSql('insert into keyboards (name, icon) VALUES ("QuickTime", "/quicktime.png");', [], nullDataHandler, errorHandler);
+            transaction.executeSql('insert into keyboards (name, icon) VALUES ("Safari", "/safari.png");', [], nullDataHandler, errorHandler);
+        }
+    );
+}
+createTables(db);
+function errorHandler(transaction, error)
+{
+    // error.message is a human-readable string.
+    // error.code is a numeric error code
+    // alert('Oops.  Error was '+error.message+' (Code '+error.code+')');
+ 
+    // Handle errors here
+    var we_think_this_error_is_fatal = true;
+    if (we_think_this_error_is_fatal) return true;
+    return false;
+}
+ 
+function dataHandler(transaction, results)
+{
+    // Handle the results
+    var string = "icon list contains the following keyboards:\n\n";
+    for (var i=0; i<results.rows.length; i++) {
+        // Each row is a standard JavaScript array indexed by
+        // column names.
+        var row = results.rows.item(i);
+        string = string + row['name'] + " (ID "+row['id']+")\n" + "extra information" + results.rows.length;
+    }
+    // alert(string);
+    // read data into HTML elements
+    var value_fill;
+    value_fill = document.getElementById('loads');
+    value_fill.innerHTML = results.rows.length;
+    value_fill = document.getElementById('mods');
+    value_fill.innerHTML = results.rows.length;
+    value_fill = document.getElementById('creates');
+    value_fill.innerHTML = 256 - results.rows.length;
+}
+ 
+db.transaction(
+    function (transaction) {
+        transaction.executeSql("SELECT * from keyboards",
+            [], // array of values for the ? placeholders
+            dataHandler, errorHandler);
+    }
+);
+        </script>
+        </div>
+        <div id="metal">
+            <div class="toolbar">
+                <h1>Computers</h1>
+                <a href="#" class="back">Back</a>
+            </div>
+            <ul class="metal">
+                <li class="arrow"><a href="#"><small><br />Current</small> Home computer <em><br /> Windows Vista <br /> (32-bit) <br />>Connected<</em></a></li>
+                <li class="arrow"><a href="#"><small><br />Connect</small> My laptop 
+<em><br /> Mac OS X Snow leopard <br /> (version 10.9) <br />>Not connected<</em></a></li>
+                <li class="arrow"><a href="#"><small><br />Connect</small> Workstation 
+<em><br /> Linux Ubuntu <br /> (version 9.9) <br />>Not connected<</em></a></li>
+            </ul>
+        </div>
+        <div id="pageevents">
+            <div class="toolbar">
+                <h1>Store</h1>
+                <a class="back" href="#">Home</a>
+            </div>
+            <ul class="rounded">
+   <h2>Mac custom keys server</h2>
+   <li class="arrow"><a href="http://mediacityonline.net/store/customkeys/mac/downloads.html">Download</a> <small class="counter">Free</small></li>
+   </ul>
+                <ul class="rounded">
+                <h2>Windows custom keys server</h2>
+                <li class="arrow"><a href="http://mediacityonline.net/store/customkeys/windows/downloads.html">Download</a> <small class="counter">Free</small></li>
+                </ul>
+                <ul class="rounded">
+                <h2>Linux custom keys server</h2>
+                <li class="arrow"><a href="http://mediacityonline.net/store/customkeys/linux/downloads.html">Coming soon</a> <small class="counter" id="creates">Free</small></li>
+            </ul>
+        </div>
+        <div id="plastic">
+            <div class="toolbar">
+                <h1>Iphone (none specific)</h1>
+                <a href="#" class="back">Back</a>
+            </div>
+            <ul class="plastic">
+                <li class="arrow"><input type="text" /></li>
+                <li class="arrow"> Ipad adaptation <input type="radio" /></li>
+            </ul>
+            <div class="info">
+                <p><strong>Default letter keyboard (footer)</strong></p>
+            </div>
+        </div>
+        <div id="ui">
+            <div class="toolbar">
+                <h1>Applications</h1><a class="button slideup" href="#ajax">+</a>
+                <a class="back" href="#">Home</a>
+            </div>
+
+            <h2>Default keyboards</h2>
+            <ul class="rounded">
+                <li class="arrow"><a href="#default_normal">Default normal</a></li>
+                <li class="arrow"><a href="#default_numerical">Default number</a></li>
+                <li class="arrow"><a href="#default_website">Default website</a></li>
+                <li class="arrow"><a href="#default_email">Default email</a></li>
+            </ul>
+            <h2>Custom keyboards</h2>
+            <ul class="rounded">
+                <li class="arrow"><a id="firstApp" href="#itunes">Itunes</a></li>
+                <li class="arrow"><a id="secondApp" href="#quicktime">QuickTime</a></li>
+                <li class="arrow"><a id="thirdApp" href="#safari">Safari</a></li>
+            </ul>
+        </div>
+
+        <div id="default_normal">
+            <div class="toolbar">
+                <h1>Normal</h1>
+                <a href="#" class="back">Menu</a>
+            </div>
+         <ul class="plastic">
+                <li class="arrow"><input type="text" /></li>
+                <li class="arrow"> Ipad adaptation <input type="radio" /></li>
+            </ul>
+            <div class="info">
+                <p><strong>Default normal keyboard (footer)</strong></p>
+            </div>
+        </div>
+
+        <div id="default_numerical">
+            <div class="toolbar">
+                <h1>Number</h1>
+                <a href="#" class="back">Menu</a>
+            </div>
+           <ul class="plastic">
+                <li class="arrow"><input type="number" /></li>
+                <li class="arrow"> Ipad adaptation <input type="radio" /></li>
+            </ul>
+            <div class="info">
+                <p><strong>Default number keyboard (footer)</strong></p>
+            </div>
+        </div>
+
+        <div id="default_website">
+            <div class="toolbar">
+                <h1>Website</h1>
+                <a href="#" class="back">Menu</a>
+            </div>
+           <ul class="plastic">
+                <li class="arrow"><input type="url" /></li>
+                <li class="arrow"> Ipad adaptation <input type="radio" /></li>
+            </ul>
+            <div class="info">
+                <p><strong>Default website keyboard (footer)</strong></p>
+            </div>
+        </div>
+
+        <div id="default_email">
+            <div class="toolbar">
+                <h1>Email</h1>
+                <a href="#" class="back">Menu</a>
+            </div>
+         <ul class="plastic">
+                <li class="arrow"><input type="email" /></li>
+                <li class="arrow"> Ipad adaptation <input type="radio" /></li>
+            </ul>
+            <div class="info">
+                <p><strong>Default email keyboard (footer)</strong></p>
+            </div>
+        </div>
+
+        <div id="itunes">
+            <div class="toolbar">
+                <h1>Itunes</h1>
+                <a href="#" class="back">Menu</a>
+            </div>
+            <p id="keyboard">
+<img src="key_up.png" id="icon_00" class="key" onclick="alert('key 1 pressed')" />
+ <span id="text_00" class="key_note">1</span>
+<img src="key_up.png" id="icon_01" class="key" onclick="alert('key 2 pressed')" />
+ <span id="text_01" class="key_note">2</span>
+<img src="key_up.png" id="icon_02" class="key" onclick="alert('key 3 pressed')" />
+ <span id="text_02" class="key_note">3</span>
+<img src="key_up.png" id="icon_03" class="key" onclick="alert('key 4 pressed')" />          
+ <span id="text_03" class="key_note">4</span>
+<img src="key_up.png" id="icon_04" class="key" onclick="alert('key 5 pressed')" />
+ <span id="text_04" class="key_note">5</span>
+<img src="key_up.png" id="icon_05" class="key" onclick="alert('key 6 pressed')" />
+ <span id="text_05" class="key_note">6</span>
+<img src="key_up.png" id="icon_06" class="key" onclick="alert('key 7 pressed')" />
+ <span id="text_06" class="key_note">7</span>
+<img src="key_up.png" id="icon_07" class="key" onclick="alert('key 8 pressed')" />
+ <span id="text_07" class="key_note">8</span>
+<img src="key_up.png" id="icon_08" class="key" onclick="alert('key 9 pressed')" />
+ <span id="text_08" class="key_note">9</span>
+<img src="key_up.png" id="icon_09" class="key" onclick="alert('key 10 pressed')" />
+ <span id="text_09" class="key_note">10</span>
+<img src="key_up.png" id="icon_10" class="key" onclick="alert('key 11 pressed')" />
+ <span id="text_10" class="key_note">11</span>
+<img src="key_up.png" id="icon_11" class="key" onclick="alert('key 12 pressed')" />
+ <span id="text_11" class="key_note">12</span>
+<img src="key_up.png" id="icon_12" class="key" onclick="alert('key 13 pressed')" />
+ <span id="text_12" class="key_note">13</span>
+<img src="key_up.png" id="icon_13" class="key" onclick="alert('key 14 pressed')" />
+ <span id="text_13" class="key_note">14</span>
+<img src="key_up.png" id="icon_14" class="key" onclick="alert('key 15 pressed')" />
+ <span id="text_14" class="key_note">15</span>
+<img src="key_up.png" id="icon_15" class="key" onclick="alert('key 16 pressed')" />
+ <span id="text_15" class="key_note">16</span>
+            </p>
+           <div class="info">
+                <p><strong>Itunes custom keyboard</strong></p>
+            </div>
+            <script>
+// javascript database
+try {
+    if (!window.openDatabase) {
+        alert('not supported');
+    } else {
+        var shortName = 'storedinformation';
+        var version = '1.0';
+        var displayName = 'Custom keys data';
+        var maxSize = 65536; // in bytes
+        var db = openDatabase(shortName, version, displayName, maxSize);
+ 
+        // You should have a database instance in db.
+    }
+} catch(e) {
+    // Error handling code goes here.
+    if (e == 2) {
+        // Version number mismatch.
+        alert("Invalid database version.");
+    } else {
+        alert("Unknown error "+e+".");
+    }
+    return;
+}
+// alert("Database is: "+db);
+// insert data
+function nullDataHandler(transaction, results) { }
+ 
+function createTables(db)
+{
+    db.transaction(
+        function (transaction) {
+ 
+            /* The first query causes the transaction to (intentionally) fail if the table exists. */
+            transaction.executeSql('CREATE TABLE keyboards(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL DEFAULT "Untitled", icon TEXT NOT NULL DEFAULT "/images/appicon.png");', [], nullDataHandler, errorHandler);
+            /* These insertions will be skipped if the table already exists. */
+            transaction.executeSql('insert into keyboards (name, icon) VALUES ("Itunes", "/itunes.png");', [], nullDataHandler, errorHandler);
+            transaction.executeSql('insert into keyboards (name, icon) VALUES ("QuickTime", "/quicktime.png");', [], nullDataHandler, errorHandler);
+            transaction.executeSql('insert into keyboards (name, icon) VALUES ("Safari", "/safari.png");', [], nullDataHandler, errorHandler);
+        }
+    );
+}
+createTables(db);
+function errorHandler(transaction, error)
+{
+    // error.message is a human-readable string.
+    // error.code is a numeric error code
+    // alert('Oops.  Error was '+error.message+' (Code '+error.code+')');
+ 
+    // Handle errors here
+    var we_think_this_error_is_fatal = true;
+    if (we_think_this_error_is_fatal) return true;
+    return false;
+}
+ 
+function dataHandler(transaction, results)
+{
+    // Handle the results
+    var string = "icon list contains the following keyboards:\n\n";
+    for (var i=0; i<results.rows.length; i++) {
+        // Each row is a standard JavaScript array indexed by
+        // column names.
+        var row = results.rows.item(i);
+        string = string + row['name'] + " (ID "+row['id']+")\n" + "extra information" + results.rows.length;
+    }
+    // alert(string);
+    // read data into HTML elements
+    var value_fill;
+    value_fill = document.getElementById('loads');
+    value_fill.innerHTML = results.rows.length;
+    value_fill = document.getElementById('mods');
+    value_fill.innerHTML = results.rows.length;
+    value_fill = document.getElementById('creates');
+    value_fill.innerHTML = 256 - results.rows.length;
+}
+ 
+db.transaction(
+    function (transaction) {
+        transaction.executeSql("SELECT * from keyboards",
+            [], // array of values for the ? placeholders
+            dataHandler, errorHandler);
+    }
+);
+        </script>
+        </div>
+
+        <div id="quicktime">
+            <div class="toolbar">
+                <h1>QuickTime</h1>
+                <a href="#" class="back">Menu</a>
+            </div>
+           <img src="Custom_keys(defaultMAP).png" margin="0" padding="0"/>
+           <div class="info">
+                <p><strong>QuickTime custom keyboard</strong></p>
+            </div>
+        </div>
+
+        <div id="safari">
+            <div class="toolbar">
+                <h1>Safari</h1>
+                <a href="#" class="back">Menu</a>
+            </div>
+           <img src="Custom_keys(defaultMAP).png" margin="0" padding="0" />
+           <div class="info">
+                <p><strong>Safari custom keyboard</strong></p>
+            </div>
+        </div>
+
+        <form id="ajax_post" action="ajax_post.php" method="POST" class="form">
+            <div class="toolbar">
+                <h1>Post Demo</h1>
+                <a class="back" href="#">Ajax</a>
+            </div>
+            <ul class="rounded">
+                <li><input type="text" name="zip" value="" placeholder="Zip Code" /></li>
+            </ul>
+            <a style="margin:0 10px;color:rgba(0,0,0,.9)" href="#" class="submit whiteButton">Submit</a>
+        </form>
+    </body>
+</html>
